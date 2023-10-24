@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ejercicio</title>
+    <style>
+        .alumnos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill,
+                    minmax(300px, 1fr));
+            /* Crea columnas automáticas */
+            gap: 20px;
+            /* Espacio entre elementos */
+        }
+
+        .alumno-container {
+            border: 1px solid #b89dc8;
+            padding: 10px;
+        }
+
+        .alumno-container:nth-child(odd) {
+            background-color: #f1e3f2;
+            /* Color para índices impares */
+        }
+
+        .alumno-container:nth-child(even) {
+            background-color: #b89dc8;
+            /* Color para índices pares */
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Ejercicio práctico</h1>
+    <div id="curso-info"></div>
+    <div id="alumnos-list" class="alumnos-grid"></div>
+    <script>
+        fetch("./mf0493_2023_10.json")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("No se pudo cargar el archivo JSON.");
+                }
+            })
+            .then((data) => {
+                const cursoInfo = document.getElementById("curso-info");
+                const alumnosList = document.getElementById("alumnos-list");
+                const curso = data.curso;
+                const fechaInicio = data.fecha_inicio;
+                const fechaFin = data.fecha_fin;
+
+                // Mostrar información del curso
+                cursoInfo.innerHTML = `
+              <h2>Curso: ${curso}</h2>
+              <p>Fecha de inicio: ${fechaInicio}</p>
+              <p>Fecha de fin: ${fechaFin}</p>
+          `;
+
+                const alumnos = data.alumnos;
+
+                alumnos.forEach((alumno) => {
+                    const alumnoDiv = document.createElement("div");
+                    alumnoDiv.classList.add("alumno-container");
+                    alumnoDiv.innerHTML = `
+                  <h2>${alumno.Nombre}</h2>
+                  <p>Email: ${alumno.email}</p>
+                  <p>GitHub: <a href="${alumno.github}" target="_blank">${alumno.github}</a></p>
+                  <p>Inicio:</p>
+                  <ul>
+                      <li>HTML: ${alumno.inicio.html}</li>
+                      <li>CSS: ${alumno.inicio.css}</li>
+                      <li>JS: ${alumno.inicio.JS}</li>
+                      <li>VUE: ${alumno.inicio.VUE}</li>
+                      <li>SQL: ${alumno.inicio.SQL}</li>
+                      <li>API: ${alumno.inicio.API}</li>
+                      <li>NODE: ${alumno.inicio.NODE}</li>
+                      <li>express: ${alumno.inicio.express}</li>
+                  </ul>
+                  <p>Fin:</p>
+                  <ul>
+                      <li>HTML: ${alumno.fin.html}</li>
+                      <li>CSS: ${alumno.fin.css}</li>
+                      <li>JS: ${alumno.fin.JS}</li>
+                      <li>VUE: ${alumno.fin.VUE}</li>
+                      <li>SQL: ${alumno.fin.SQL}</li>
+                      <li>API: ${alumno.fin.API}</li>
+                      <li>NODE: ${alumno.fin.NODE}</li>
+                      <li>express: ${alumno.fin.express}</li>
+                  </ul>
+              `;
+                    alumnosList.appendChild(alumnoDiv);
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    </script>
+</body>
+
+</html>
